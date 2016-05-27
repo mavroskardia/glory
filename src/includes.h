@@ -13,6 +13,8 @@
 #include <SDL2/SDL_opengl_glext.h>
 
 #include "macros.h"
+#include "shader_reader.h"
+
 #include "app.h"
 
 #endif

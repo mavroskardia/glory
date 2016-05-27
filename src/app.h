@@ -10,7 +10,7 @@ class GloryApp {
     bool done = false;
 
     SDL_Window *window;
-    SDL_GLContext glcontext;
+    SDL_GLContext context;
     GLuint vaid;
 
 public:

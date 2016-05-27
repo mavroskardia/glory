@@ -2,6 +2,7 @@
 
 GloryApp::~GloryApp() {
 
+    SDL_GL_DeleteContext(context);
     SDL_DestroyWindow(window);
 
 }
@@ -10,6 +11,11 @@ void GloryApp::init_sdl(void) {
 
     SDL_Init(SDL_INIT_EVERYTHING);
 
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
+    SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
+
     window = SDL_CreateWindow(
         "GLory",
         SDL_WINDOWPOS_UNDEFINED,
@@ -17,6 +23,8 @@ void GloryApp::init_sdl(void) {
         SCREEN_WIDTH,
         SCREEN_HEIGHT,
         SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
+
+    context = SDL_GL_CreateContext(window);
 
 }
 
@@ -55,8 +63,20 @@ void GloryApp::render(void) {
 
 void GloryApp::init_test(void) {
 
-    glGenVertexArrays(1, &vaid);
-    glBindVertexArray(vaid);
+    // glGenVertexArrays(1, &vaid);
+    // glBindVertexArray(vaid);
+
+    float triVertices[] = {
+         0.0f,  0.5f,
+         0.5f, -0.5f,
+        -0.5f, -0.5f
+    };
+
+    GLuint vbo;
+    glGenBuffers(1, &vbo);
+
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(triVertices), triVertices, GL_STATIC_DRAW);
 
 }
 
