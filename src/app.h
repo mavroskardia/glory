@@ -1,4 +1,5 @@
 class GloryApp {
+
     void init_sdl(void);
     void init_test(void);
 
@@ -11,8 +12,11 @@ class GloryApp {
     SDL_Window *window;
     SDL_GLContext glcontext;
     GLuint vaid;
+
 public:
+
     ~GloryApp();
 
     int run(void);
+
 };

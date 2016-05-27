@@ -1,11 +1,13 @@
 #include "includes.h"
 
 GloryApp::~GloryApp() {
-    SDL_DestroyRenderer(renderer);
+
     SDL_DestroyWindow(window);
+
 }
 
 void GloryApp::init_sdl(void) {
+
     SDL_Init(SDL_INIT_EVERYTHING);
 
     window = SDL_CreateWindow(
@@ -16,10 +18,10 @@ void GloryApp::init_sdl(void) {
         SCREEN_HEIGHT,
         SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
 
-    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 }
 
 void GloryApp::process_events(void) {
+
     SDL_Event event;
 
     while (SDL_PollEvent(&event)) {
@@ -34,27 +36,32 @@ void GloryApp::process_events(void) {
                 break;
         }
     }
+
 }
 
 void GloryApp::run_timing() {
+
     SDL_Delay(17);
+
 }
 
 void GloryApp::render(void) {
-    SDL_SetRenderDrawColor(renderer, 200, 200, 200, 255);
-    SDL_RenderClear(renderer);
 
     // draw_triangle();
 
-    SDL_RenderPresent(renderer);
+    SDL_GL_SwapWindow(window);
+
 }
 
 void GloryApp::init_test(void) {
-    glGenVertexArrays(1, &vaId);
-    glBindVertexArray(vaId);
+
+    glGenVertexArrays(1, &vaid);
+    glBindVertexArray(vaid);
+
 }
 
 int GloryApp::run(void) {
+
     debugout("Running glory");
 
     init_sdl();
@@ -71,4 +78,5 @@ int GloryApp::run(void) {
     SDL_Quit();
 
     return 0;
+
 }

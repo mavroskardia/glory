@@ -5,7 +5,7 @@ INCLUDES=-I/usr/include/SDL2
 REXE=glory
 DEXE=dglory
 OBJS=main.o app.o
-LIBS=-lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_gfx
+LIBS=-lSDL2 -lSDL2_image -lGL
 
 $(DEXE): $(OBJS)
 	$(CC) -o $@ $^ $(LIBS)
