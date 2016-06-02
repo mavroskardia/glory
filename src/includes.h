@@ -5,6 +5,10 @@
 #define SCREEN_HEIGHT 768
 
 #include <iostream>
+#include <fstream>
+#include <string>
+#include <chrono>
+#include <vector>
 
 #define GL_GLEXT_PROTOTYPES
 
@@ -13,7 +17,7 @@
 #include <SDL2/SDL_opengl_glext.h>
 
 #include "macros.h"
-#include "shader_reader.h"
+#include "shader_manager.h"
 
 #include "app.h"
 
