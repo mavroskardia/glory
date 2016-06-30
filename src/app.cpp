@@ -54,6 +54,11 @@ void GloryApp::process_events(void) {
 
 void GloryApp::run_timing(void) {
 
+    ticks++;
+    ticks = ticks % 100;
+
+    glUniform1i(glGetUniformLocation(prog, "time"), ticks);
+
     SDL_Delay(17);
 
 }
@@ -62,7 +67,7 @@ void GloryApp::draw_triangle(void) {
 
     //glDrawArrays(GL_TRIANGLES, 0, 3);
     // using the element array. six values, uints, no offset
-    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 }
 
@@ -75,6 +80,10 @@ void GloryApp::render(void) {
     draw_triangle();
 
     SDL_GL_SwapWindow(window);
+
+}
+
+void GloryApp::init_textures(void) {
 
 }
 
@@ -96,11 +105,11 @@ GLuint GloryApp::init_test(void) {
     };
 
     GLfloat vertices[] = {
-        // x      y     r     g     b
-        -0.5f,  0.5f, 1.0f, 0.0f, 0.0f, // top left
-         0.5f,  0.5f, 0.0f, 1.0f, 0.0f, // top right
-         0.5f, -0.5f, 0.0f, 0.0f, 1.0f, // bottom right
-        -0.5f, -0.5f, 1.0f, 1.0f, 1.0f  // bottom left
+        //  x      y     r     g     b,    u,    v
+        -0.5f,  0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, // top left
+         0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, // top right
+         0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, // bottom right
+        -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f  // bottom left
     };
 
     // make it an array buffer
@@ -113,20 +122,72 @@ GLuint GloryApp::init_test(void) {
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements, GL_STATIC_DRAW);
 
     // load shader programs
-    GLuint prog = sm.create_program("shaders/vertex/cornercolor.glsl", "shaders/fragment/cornercolor.glsl");
+    prog = sm.create_program("shaders/vertex/cornercolor.glsl", "shaders/fragment/cornercolor.glsl");
 
     glUseProgram(prog);
 
     // tell shader program how to interact outside itself
     GLint posAttrib = glGetAttribLocation(prog, "position");
     glEnableVertexAttribArray(posAttrib);
-    glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), 0);
+    glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE,
+                          7 * sizeof(GLfloat), 0);
 
     GLint colAttrib = glGetAttribLocation(prog, "color");
     glEnableVertexAttribArray(colAttrib);
     glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE,
-                          5 * sizeof(GLfloat),
-                          (void*)(2 * sizeof(GLfloat)));
+                          7 * sizeof(GLfloat), (void*)(2 * sizeof(GLfloat)));
+
+    GLint texAttrib = glGetAttribLocation(prog, "texcoord");
+    glEnableVertexAttribArray(texAttrib);
+    glVertexAttribPointer(texAttrib, 2, GL_FLOAT, GL_FALSE,
+                          7 * sizeof(GLfloat), (void*)(5 * sizeof(GLfloat)));
+
+    // set up the tex reference
+    GLuint textures[2];
+    glGenTextures(2, textures);
+
+    // activate the first texture
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, textures[0]);
+
+    // load texture image
+    SDL_Surface *img = IMG_Load("../res/puppy.jpg");
+
+    // set the texture data (this op operates on the bound tex)
+    // arguments are as follows:
+    //  0: 2d texture specifier
+    //  1: level of detail (0 == base, others are for mipmaps)
+    //  2: internal format for video card
+    //  3: width of image
+    //  4: height of image
+    //  5: always 0
+    //  6: format of loaded pixels
+    //  7: data type of a pixel
+    //  8: the actual pixels
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, img->w, img->h, 0, GL_RGB, GL_UNSIGNED_BYTE, img->pixels);
+    glUniform1i(glGetUniformLocation(prog, "tex0"), 0);
+
+    SDL_FreeSurface(img);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, textures[1]);
+
+    img = IMG_Load("../res/crate.jpg");
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, img->w, img->h, 0, GL_RGB, GL_UNSIGNED_BYTE, img->pixels);
+    glUniform1i(glGetUniformLocation(prog, "tex1"), 1);
+
+    SDL_FreeSurface(img);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     return 0;
 
