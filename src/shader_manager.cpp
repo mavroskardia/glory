@@ -2,8 +2,8 @@
 
 ShaderManager::~ShaderManager() {
 
-    for (GLuint prog : programs) {
-        glDeleteProgram(prog);
+    for (auto prog : programs) {
+        glDeleteProgram(prog.second);
     }
 
     for (GLuint shader : shaders) {
@@ -56,7 +56,8 @@ GLuint ShaderManager::load_fragment_shader(const char* fname) {
 
 }
 
-GLuint ShaderManager::create_program(const char* vertex_shader_fname,
+GLuint ShaderManager::create_program(const char* program_name,
+                                     const char* vertex_shader_fname,
                                      const char* fragment_shader_fname) {
 
     GLuint vshader = load_vertex_shader(vertex_shader_fname);
@@ -73,8 +74,20 @@ GLuint ShaderManager::create_program(const char* vertex_shader_fname,
     shaders.push_back(vshader);
     shaders.push_back(fshader);
 
-    programs.push_back(prog);
+    programs[program_name] = prog;
+
+    debugout("Created shader program with id " << prog << " -- calling it " << program_name << " with id " << programs[program_name])
 
     return prog;
+}
+
+GLuint ShaderManager::get_uniform_location(const char* program_name,
+                                           const char* uniform_name) {
+
+    GLuint loc = glGetUniformLocation(programs[program_name], uniform_name);
+
+    debugout("get_uniform_location: " << program_name << " has uniform " << uniform_name << " at " << loc);
+
+    return loc;
 
 }

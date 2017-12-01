@@ -9,6 +9,11 @@
 #include <string>
 #include <chrono>
 #include <vector>
+#include <map>
+
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #define GL_GLEXT_PROTOTYPES
 
@@ -18,6 +23,7 @@
 #include <SDL2/SDL_opengl_glext.h>
 
 #include "macros.h"
+#include "texture_manager.h"
 #include "shader_manager.h"
 
 #include "app.h"

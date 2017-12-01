@@ -1,22 +1,31 @@
 class GloryApp {
 
     void init_sdl(void);
-    GLuint init_test(void);
     void init_textures(void);
+    void init_shaders(void);
+    void init_buffers(void);
+    void init_matrices(void);
 
-    void run_timing(void);
     void process_events(void);
     void render(void);
-
-    void draw_triangle(void);
+    void update(const float dt);
 
     bool done = false;
     int ticks;
 
     ShaderManager sm;
+    TextureManager tm;
+
     GLuint vao;
     GLuint ebo, vbo;
-    GLuint prog;
+
+    GLint posAttrib, colAttrib, texAttrib;
+    GLint uniModel, uniView, uniProj;
+    GLuint uniColor;
+
+    glm::mat4 model;
+    glm::mat4 view;
+    glm::mat4 proj;
 
     SDL_Window *window;
     SDL_GLContext context;

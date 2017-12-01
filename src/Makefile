@@ -4,7 +4,7 @@ CC=g++ -std=c++11 $(CFLAGS)
 INCLUDES=-I/usr/include/SDL2
 REXE=glory
 DEXE=dglory
-OBJS=main.o app.o shader_manager.o
+OBJS=main.o app.o shader_manager.o texture_manager.o
 LIBS=-lSDL2 -lSDL2_image -lGL
 
 $(DEXE): $(OBJS)
