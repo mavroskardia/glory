@@ -15,7 +15,8 @@ class GloryApp {
 
     ShaderManager sm;
     TextureManager tm;
-
+    Camera camera;
+    
     GLuint vao;
     GLuint ebo, vbo;
 

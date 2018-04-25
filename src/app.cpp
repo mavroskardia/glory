@@ -165,6 +165,19 @@ void GloryApp::process_events(void) {
                 if (event.key.keysym.scancode == SDL_SCANCODE_ESCAPE) {
                     done = true;
                 }
+                if (event.key.keysym.scancode == SDL_SCANCODE_UP) {
+                    camera.center.z -= 0.5f;
+                }
+                if (event.key.keysym.scancode == SDL_SCANCODE_DOWN) {
+                    camera.center.z += 0.5f;
+                }
+                if (event.key.keysym.scancode == SDL_SCANCODE_LEFT) {
+                    camera.center.x -= 0.5f;
+                }
+                if (event.key.keysym.scancode == SDL_SCANCODE_RIGHT) {
+                    camera.center.y -= 0.5f;
+                }
+                
                 break;
         }
     }
@@ -178,6 +191,7 @@ void GloryApp::render(void) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // draw models
+    
     glDrawArrays(GL_TRIANGLES, 0, 36);
 
     glEnable(GL_STENCIL_TEST);
@@ -215,11 +229,7 @@ void GloryApp::render(void) {
 void GloryApp::update(const float dt) {
 
     { // update view
-        view = glm::lookAt(
-            glm::vec3(3.0f, 3.0f, 3.0f),
-            glm::vec3(0.0f, 0.0f, 0.0f),
-            glm::vec3(0.0f, 0.0f, 1.0f)
-        );
+        view = glm::lookAt(camera.eye, camera.center, camera.up);
         glUniformMatrix4fv(uniView, 1, GL_FALSE, glm::value_ptr(view));
     }
 
@@ -229,7 +239,7 @@ void GloryApp::update(const float dt) {
     }
 
     { // transform models
-        model = glm::mat4();
+        model = glm::mat4(1.0f);
         model = glm::rotate(model, dt * glm::radians(180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
         // GLfloat s = sin(dt * 5.0f) * 0.25f + 0.75f;
         // model = glm::scale(model, glm::vec3(s, s, s));

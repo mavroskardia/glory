@@ -23,8 +23,11 @@
 #include <SDL2/SDL_opengl_glext.h>
 
 #include "macros.h"
+#include "object.h"
 #include "texture_manager.h"
 #include "shader_manager.h"
+#include "object_manager.h"
+#include "camera.h"
 
 #include "app.h"
 
